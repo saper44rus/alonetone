@@ -1,8 +1,9 @@
 language: ruby
-rvm: 2.0.0
-install: bin/wad
+rvm: 2.1.2
 before_install:
   - sudo apt-get install -y libsndfile-dev lame
+bundler_args: --without development --deployment --jobs=3 --retry=3
+cache: bundler
 before_script:
   - mysql -e 'create database alonetone_test';
   - bundle exec rake copy_config
