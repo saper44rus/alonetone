@@ -1,4 +1,5 @@
 //= require jquery
+//= require turbolinks
 //= require jquery-ui
 //= require jquery_ujs
 //= require soundmanager2
@@ -895,14 +896,18 @@ Radio = $.klass({
   }
 });
 
+Turbolinks.pagesCached(0);
+Turbolinks.enableProgressBar(false);
 
-jQuery(function($) {
+$(document).on('page:change', function() {
+  $.clearBehavior();
+
   // let us cache forms, make sure that auth tokens are replaced
   $('input[name=authenticity_token]').val($('meta[name=csrf-token]').attr('content'))
   
   // Tracks
   $('.asset, .track').attach(Track);
-  
+
   // display listen_count when needed
   if(window.showPlayCounts){
     $('.listen_count').show();
@@ -990,9 +995,7 @@ jQuery(function($) {
   
   $('#radio').attach(Radio);
   
-  jQuery(document).ready(function($) {
-    $('a[rel*=facebox]').facebox() 
-  })
+  $('a[rel*=facebox]').facebox();
 
   // if on the stats page
   $('#statstable').tablesorter({
@@ -1049,3 +1052,26 @@ jQuery(function($) {
   })
 
 });
+
+(function() {
+  var behaviors = [];
+
+  $.fn.extend({
+    rawAttach: $.fn.attach,
+
+    attach: function() {
+      behaviors.push(arguments[0]);
+      return $.fn.rawAttach.apply(this, arguments);
+    }
+  });
+
+  $.extend({
+    clearBehavior: function() {
+      behaviors.forEach(function(behavior) {
+        (behavior.instances || []).splice(0);
+      });
+      behaviors.splice(0);
+    }
+  });
+
+})();

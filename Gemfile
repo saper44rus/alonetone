@@ -4,6 +4,8 @@ gem "rails", "~> 4.2"
 
 gem "mysql2"
 
+gem 'turbolinks'
+
 # greenfield
 gem 'greenfield', path: "greenfield"
 
