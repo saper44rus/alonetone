@@ -144,6 +144,7 @@ Alonetone::Application.routes.draw do
     resources :playlists do
       collection do
         get :latest
+        get :select
         match :sort, :via => [:get, :post]
       end
       member do

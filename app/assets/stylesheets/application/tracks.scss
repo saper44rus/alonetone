@@ -190,14 +190,10 @@
       max-width: 385px;
     }
   }
-  textarea {
-    margin-top: 10px;
-    width: 380px;
-  }
 
   .seekbar {
     display: block;
-    background-color: $playlist_box_silver;
+    background-color: #e1e2e1;
 
     &:not(.initialized) {
       border-top: 1px solid $body_background;

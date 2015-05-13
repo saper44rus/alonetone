@@ -1,0 +1,17 @@
+<h1>Add to Playlist:</h1>
+
+<ul class="playlists">
+  <% @playlists.each do |playlist| %>
+    <li>
+      <% if playlist.track_id %>
+        <%= link_to remove_track_user_playlist_path(@user, playlist, track_id: playlist.track_id), :'data-method' => 'get' do %>
+          <input type="checkbox" checked /><%= playlist.title %>
+        <% end %>
+      <% else %>
+        <%= link_to add_track_user_playlist_path(@user, playlist, asset_id: "asset_#{@asset.id}"), :'data-method' => 'post' do %>
+          <input type="checkbox" /><%= playlist.title %>
+        <% end %>
+      <% end %>
+    </li>
+  <% end %>
+</ul>

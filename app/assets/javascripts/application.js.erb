@@ -86,8 +86,6 @@ FavoriteToggle = $.klass(Remote.Link,{
   },
   
   beforeSend:function(e){
-    // modify the link to use the correct user's username
-    // this.element.attr("href",window.userPersonalization+this.element.attr('href'));
     if(this.element.hasClass('favorited'))
       this.element.removeClass('favorited');
     else
@@ -111,6 +109,54 @@ FollowToggle = $.klass(Remote.Link,{
       this.element.addClass('following');
       this.element.html('<div class="sprites-heart-broken"></div> un-follow');
     }
+  }
+});
+
+PlaylistSelector = $.klass({
+  initialize: function(asset) {
+    this.asset = asset;
+    this.panel = $('.faces', asset);
+    this.container = $('.select_playlist', this.asset);
+  },
+
+  open: function() {
+    this.element.removeClass('add_to_playlist').addClass('back');
+    this.panel.css('margin-left', '-'+this.container.position().left+'px');
+
+    var self = this;
+    $.get(this.element.attr('href'), function(data) {
+      self.container.html(data);
+      self.container.css('position', 'static');
+      self.panel.children('.details').css('display', 'none');
+      self.panel.css('margin-left', '');
+
+      $('a', self.container).click(function(e) {
+        e.preventDefault();
+        $.ajax({
+          url: $(this).attr('href'),
+          method: $(this).data('method'),
+          complete: function() {
+            self.close();
+          }
+        });
+        return false;
+      });
+    });
+  },
+
+  close: function() {
+    this.element.removeClass('back').addClass('add_to_playlist');
+    this.container.css('position', 'absolute');
+    this.panel.children('.details').css('display', 'block');
+    this.panel.css('margin-left', '');
+  },
+
+  onclick: function(e) {
+    e.preventDefault();
+    if (this.element.hasClass('back'))
+      this.close();
+    else
+      this.open();
   }
 });
 
@@ -452,7 +498,12 @@ CommentForm = $.klass(Remote.Form, {
       if(this.checkbox != undefined) this.checkbox.click($.bind(this.togglePrivate,this));
 
       // replace the empty comment personalization with js payload
-       $('.comment_as', this.element).replaceWith(window.userPersonalization);
+      $('.comment_as', this.element).html(window.userAvatarTiny);
+
+      if (window.userIsGuest)
+        this.textarea.attr('placeholder', 'Say something as a guest');
+      else
+        this.textarea.attr('placeholder', 'Say something, '+window.userDisplayName);
      
       $super();
     },
@@ -579,7 +630,7 @@ Track = $.klass({
     this.reachedEnd = false;
     this.owner = $('.artist',this.element).attr('href').replace('/','');
     // dont allow tab details to be opened on editing playlists
-    this.allowDetailsOpen = (this.element.hasClass('unopenable') || (this.element.parent().parent('#single_track').size() > 0)) ? false : true;
+    this.allowDetailsOpen = !this.element.hasClass('unopenable') && !this.more.hasClass('always_open');
   },
     
   
@@ -588,7 +639,6 @@ Track = $.klass({
   // so test the origin element of the click using selectors
   onclick: $.delegate({
     '.play_link' : function(e){ return this.togglePlay()},      // open comments
-    '.track_link': function(e){ return this.toggleDetails(1)}, // open info
     '.download_link':function(e){ return this.toggleDetails(2)}, // open sharing
     '.title':function(e){ return this.toggleDetails(1)},  // open 
     '.title_left_column_bottom':function(e){ return this.toggleDetails(1)},  // open 
@@ -630,23 +680,6 @@ Track = $.klass({
     if(this.isOpen != false) this.more.slideDown(300,function(){
         $('textarea',this).focus();
     });
-		
-		// Show the edit link if admin and/or owner
-		if((this.owner===window.username) || window.userIsAdmin){
-		  $('.show_to_admin_or_owner', this.more).show();
-		  
-		  // Show some text prompting them to edit if no description
-		  if($('.description .user_description :not(h3)', this.more).text() == ""){
-		    var href = $('.edit_in_box', this.more).attr('href');
-		    var prompt = '<span class="hint"><a class="hint" href="'+href+'">Add a description</a> to help listeners find your music</span>';
-		     $('.description .user_description', this.more).append(prompt);
-		  }
-		}
-		
-		// Show mp3 details if admin
-		if(window.userIsAdmin){
-		  $('.show_to_admin').show();
-		}
 		
     // close all other detail panes except currently playing
     for(var i=0;i< this.behavior.instances.length;i++){
@@ -804,8 +837,9 @@ Track = $.klass({
   
   createTabbies : function(){
     this.tabbies = $(this.more).attachAndReturn(Tabbies)[0]; // low pro returns an array 
-    this.commentForm = $('.comment_form form',this.more).attachAndReturn(CommentForm)[0];
+    this.commentForm = $('.comment_form',this.more).attachAndReturn(CommentForm)[0];
     $('a.add_to_favorites',this.more).attach(FavoriteToggle);
+    $('a.add_to_playlist',this.more).attach(PlaylistSelector, this.element);
   },
   startTimer : function(){
     if(this.timer != undefined)
@@ -965,8 +999,8 @@ $(document).on('page:change', function() {
   $('#plus_uploader').attach(Uploader);
   
   // single track page love
-  $('#single_track .comment_form form').attach(CommentForm);
   $('#single_track a.add_to_favorites').attach(FavoriteToggle);
+  $('#single_track a.add_to_playlist').attach(PlaylistSelector, $('#single_track .asset'));
 
   // bio
   $('a.follow').attach(FollowToggle);
@@ -985,10 +1019,7 @@ $(document).on('page:change', function() {
     });
   
   // features/blog comment form
-  $('#bug_form form').attach(CommentForm);
-  $('.comment .comment_form form').attach(CommentForm);
-  $('.update .comment_form form').attach(CommentForm);
-  $('.feature .comment_form form').attach(CommentForm);
+  $('.comment_form').attach(CommentForm);
     
   // mass editing (ajax)
   $('#mass_edit .edit_track form').attach(EditForm);

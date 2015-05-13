@@ -1,9 +1,57 @@
-<%# cache('layout'+asset.cache_key) do %>
-  <%= content_tag :div, :class => 'asset ' do %>
-    <%= render :layout => 'assets/asset_layout', :locals => {:asset => asset} do %>
-      <%= link_to asset.user.name, user_home_path(asset.user), :class => 'artist', :title => "#{asset.user.name} on alonetone " %>
-    <% end %>
-	<%= render :partial => 'assets/asset_tabs', :locals => {:asset => asset} unless @single_track %>
-  <% end %>
-<%# end %>
+<div class="asset">
+  <%= render 'assets/player', asset: asset, display_name: ((block_given? && yield.presence) || asset.user.name) %>
 
+  <div class="panel<%= ' always_open' if @single_track %>">
+    <div class="actions">
+      <%= favorite_toggle(asset) %>
+      <%= link_to('add to playlist', select_user_playlists_path(current_user, asset_id: asset.id), class: 'add_to_playlist') if logged_in? %>
+      <%= link_to('download', user_track_path(asset.user, asset, format: 'mp3'), class: 'download') %>
+    </div>
+
+    <div class="faces">
+      <div id="details_track_<%= asset.unique_id %>" class="details">
+        <div class='alonetoner'>
+          <%= user_image_link(asset.user, :small) unless asset.description.blank? %>
+        </div>
+  
+        <div class="description">
+          <div class='user_description'>
+            <%= markdown(awesome_truncate_with_read_more(asset, 300)) %>
+          </div>
+  
+          <% if logged_in? || asset.guest_can_comment? %>
+            <%= form_for :comment, :url => user_track_comments_path(asset.user, asset), :id=>"comment_form_#{asset.unique_id}", :html => {:class => 'comment_form'} do |f| %>
+              <div class="comment_as">
+                <!-- will be replaced by js payload to allow caching -->
+              </div>
+              
+              <%= f.text_area :body, :rows => 4, :cols => 40, :class=> 'double_trouble', :id=>"comment_body_#{asset.unique_id}"  %>
+              
+              <div class="private_check_box">
+                <label><%= f.check_box :private, :class => 'private' %> <span class="public">Make Private</span></label>
+              </div>
+              
+              <span class="private" style="display:none;">
+                <%= image_tag 'icons/private.png' %> Only <%= asset.user.name%> and alonetone mods will see this
+              </span>
+              
+              <%= f.hidden_field :commentable_type, :value => 'Asset', :id=> "comment_commentable_type_#{asset.unique_id}"%>
+              <%= f.hidden_field :commentable_id, :value => asset.id, :id=> "comment_commentable_type_#{asset.unique_id}"%>
+              
+              <div class="submit_wrapper submit_wrapper_comment">
+                <div class="comment_waiting" >
+                  <div class="text"><!-- placeholder response text --></div>
+                </div>
+                <div class="small_spinner" style="display:none;"></div>
+                <%= f.submit "send comment to #{asset.user.name}".html_safe, :class => 'comment_submit',:id => "submit_#{asset.unique_id}"%>
+              </div>
+            <% end %>
+            <div style="clear:both"></div>
+          <% end %>
+        </div>
+      </div>
+      <div class="select_playlist">
+      </div>
+    </div>
+  </div>
+</div>

@@ -26,34 +26,7 @@
   <% end %>
   
   <div id="single_track" class="box<%= ' descriptionless' unless @asset.description.present? %>">
-    <%= render :partial => 'assets/assets'%>  
-    <%= favorite_toggle(@asset) if logged_in? %>
-    <% if @asset.description && !@asset.description.empty? %>
-      <div id="track_details" class="static_content">
-        <h1>About "<%= @asset.title %>"</h1>
-        <p><%= markdown @asset.description %></p>
-        <% if playlist = @asset.first_playlist %>  
-          From the album / playlist <%= link_to (playlist.title), user_playlist_path(@asset.user,playlist) %>
-          <div class="min_height_50">
-            <div class="mini_cover">
-              	<%= link_to(image_tag(playlist.cover(:small), user_playlist_path(@asset.user,playlist), :class => 'cover_50')) %>
-            </div>
-          </div>
-        <% end %>    
-      </div>
-    <% end %>
-
-    <% if @asset.youtube_embed && !@asset.youtube_embed.empty? %>
-      <div class='static_content static_content_youtube'>
-        <iframe id="ytplayer" type="text/html" width="420" height="315" src="http://www.youtube.com/embed/<%=@asset.youtube_embed%>" frameborder="0"></iframe>
-      </div>
-    <% end %>
-
-    <% if logged_in? || @asset.guest_can_comment? %>
-    	<div class="static_content">
-      	<%= render :partial => 'comment', :locals => {:asset => @asset} %>
-      </div>
-    <% end %>
+    <%= render :partial => 'assets/asset', locals: { asset: @asset } %>
   </div>
   
   <%= render :partial => 'big_share'%>

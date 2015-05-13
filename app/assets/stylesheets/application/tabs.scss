@@ -115,13 +115,6 @@ div.tabs {
 }
 
 .ui-tabs-panel {
-  position: relative;
-  clear: both;
-  width: 380px;
-  padding: 15px 20px 10px 20px;
-  background: #e1e2e1;
-  // again, NO position:relative, it makes IE fail
-  // declare background color for container to avoid distorted fonts in IE while fading
   a,a:visited {
     color: $text_color;
     text-decoration: underline;
@@ -161,88 +154,10 @@ div.tabs {
     }
   }
   .panel {
-    border-top: 1px solid black;
-    width: 380px;
-    padding: 10px 20px;
-    margin-left: -20px;
-    border-top-color: $body_background;
-    line-height: 15px;
-    overflow: hidden;
-
-    &.no_border {
-      border: none;
-
-    }
     &.description_panel {
-      position: relative;
-      min-height: 60px;
-      p {
-        color: $text_color;
-      }
-      .alonetoner {
-        position: absolute;
-        // top: 7px;
-        left: 15px;
-        height: 100%;
-        a {
-          width: 50px;
-          height: 50px;
-          overflow: hidden;
-        }
-        a img {
-          border: 1px solid #9fa28d;
-          height: 50px;
-          width: 50px;
-          &.no_border {
-            border: none;
-          }
-        }
-      }
-      .description {
-        margin-left: 60px;
-        font-size: 14px;
-        line-height: 17px;
-        width: 304px;
-        .user_description {
-          p{
-            margin-bottom:1em;
-          }
-        }
-        p img{
-          max-width: 290px;
-        }
-
-        p {
-          margin-top: 0px;
-          margin-bottom:0px;
-        }
-        
-        .description_more p  a {
-          font-weight: bold!important;
-          text-decoration: none!important;
-          font-size: 12px!important;
-          margin-bottom:1em;
-        }
-
-      }
-      .stats {
-        font-size: 12px;
-        line-height: 14px;
-      }
-      .admin {
-        font-size: 10px;
-        padding-top: 20px;
-        line-height: 12px;
-        color: #666;
-      }
     }
   }
   .description_panel {
-    padding-top: 5px;
-    font-size: 12px;
-    p {
-      padding-right: 30px;
-    }
   }
 }
 

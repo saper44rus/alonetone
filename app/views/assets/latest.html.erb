@@ -67,7 +67,11 @@
   <div class="sprites-stars sprites-before-heading"></div>
   <h2 id="recently_favorited" class="box">Recently favorited</h2>
   <div class="box">
-    <%= render :partial => 'shared/favorite', :collection => @favorites %>
+    <% @favorites.each do |favorite| %>
+      <%= render layout: 'assets/asset', locals: { asset: favorite.asset } do %>
+        <%= favorite.asset.user.name %> (fav'd by <%= favorite.user.name %>)
+      <% end %>
+    <% end %>
   </div>  
   <div class="footer_box">
     <%= link_to radio_path(:per_page => 40, :source => 'favorites'), :class => 'view_all', :title => 'alonetone radio: recently favorited' do %>

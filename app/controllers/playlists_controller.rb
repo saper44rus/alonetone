@@ -1,7 +1,7 @@
 class PlaylistsController < ApplicationController
 
   before_filter :find_user, :except => :all
-  before_filter :find_playlists, :except => [:index, :new, :create, :sort, :all]
+  before_filter :find_playlists, :except => [:index, :new, :create, :sort, :all, :select]
   before_filter :require_login, :except => [:index, :show, :all]
   before_filter :find_tracks, :only => [:show, :edit, :all]
 
@@ -121,6 +121,15 @@ class PlaylistsController < ApplicationController
     @playlist.destroy
     flash[:notice] = "That playlist is toast."
     redirect_to(user_playlists_url(@user))
+  end
+
+  def select
+    @asset = Asset.find(params[:asset_id])
+    @playlists = @user.playlists.include_private.distinct.
+                   select("playlists.*, tracks.id AS track_id").
+                   joins('LEFT JOIN tracks ON tracks.playlist_id = playlists.id').
+                   where('tracks.id IS NULL or tracks.asset_id = ?', @asset.id)
+    render :layout => nil
   end
 
   protected

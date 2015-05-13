@@ -190,17 +190,14 @@ a.overlay {
 }
 
 .comment_form {
-
-overflow: hidden;
+  position: relative;
 
   .comment_as {
-    line-height: 25px;
-    font-size: 14px;
-    height: 25px;
-    margin-bottom: 5px;
     img {
-      float: left;
-      margin-right: 5px;
+      position: absolute;
+      left: -27px;
+      width: 25px;
+      height: 25px;
     }
   }
   .public, .private {
@@ -568,34 +565,6 @@ div.small_spinner {
   width: 20px;
 }
 
-// favorites
-
-a.add_to_favorites, a.favorited {
-  
-  @include retina-sprite(heart-with-plus);
-  text-indent: -9999px;
-  position: absolute;
-  right: 16px;
-  margin-top: 17px;
-  z-index: 2;
-  display: block;
-  width: 29px;
-  height: 25px;
-  opacity: 0.55;
-  &:hover {
-    opacity: 0.999;
-  }
-  &.favorited {
-    right: 14px;
-    margin-top: 19px;
-    @include retina-sprite(heart);
-    opacity: 0.99;
-    &:hover {
-      @include retina-sprite(heart-broken);
-    }
-  }
-}
-
 // misc
 
 #welcome {
@@ -841,12 +810,30 @@ h1 span#channel_name {
 
 
 
-.asset.played {
-  opacity: 0.2;
-}
-
-.asset.playing, .asset.hover {
-  opacity: 0.99;
+.asset .more {
+  .comment_waiting {
+    position: absolute;
+    background-color: $tab_box_silver;
+    text-align: center;
+    bottom: 10px;
+    left: 19px;
+    color: $orange;
+    font-weight: bold;
+    font-size: 14px;
+    text-align: center;
+    div.ajax_success, div.ajax_fail {
+      background: transparent image-url('icons/ok.png') no-repeat top left;
+      text-indent: 35px;
+      height: 30px;
+      line-height: 30px;
+    }
+    div.ajax_success {
+      color: $green;
+    }
+    div.ajax_fail {
+      background: transparent image-url('icons/not_ok.png') no-repeat top left;
+    }
+  }
 }
 
 // stats
