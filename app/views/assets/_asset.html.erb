@@ -1,4 +1,4 @@
-<div class="asset">
+<div class="asset" id="asset_<%= asset.id %>">
   <%= render 'assets/player', asset: asset, display_name: ((block_given? && yield.presence) || asset.user.name) %>
 
   <div class="panel<%= ' always_open' if @single_track %>">

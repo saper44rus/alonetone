@@ -4,6 +4,6 @@
   </div>
 	
 	<div class="scriptaculous">
-	  <%= render :partial => 'playlists/asset', :collection => @favorites.collect(&:asset) %>
+	  <%= render @favorites.collect(&:asset) %>
 	</div>
 </div>

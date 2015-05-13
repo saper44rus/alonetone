@@ -751,6 +751,7 @@ Track = $.klass({
   getSound: function() {
     if (!this.sound) {
       var seekbar = this.seekbar.firstAttached(TrackSeekbar);
+      seekbar = seekbar || {updateLoaded: function(){}, updatePlayed: function() {}};
       this.sound = soundManager.createSound({
         id: this.soundID,
         url: this.trackURL,
