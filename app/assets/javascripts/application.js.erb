@@ -115,20 +115,18 @@ FollowToggle = $.klass(Remote.Link,{
 PlaylistSelector = $.klass({
   initialize: function(asset) {
     this.asset = asset;
-    this.panel = $('.faces', asset);
-    this.container = $('.select_playlist', this.asset);
+    this.container = $('#select_playlist');
+    this.loadTarget = this.container.children('div');
   },
 
   open: function() {
-    this.element.removeClass('add_to_playlist').addClass('back');
-    this.panel.css('margin-left', '-'+this.container.position().left+'px');
+    this.loadTarget.empty();
+    this.container.hide().css(this.element.offset());
 
     var self = this;
     $.get(this.element.attr('href'), function(data) {
-      self.container.html(data);
-      self.container.css('position', 'static');
-      self.panel.children('.details').css('display', 'none');
-      self.panel.css('margin-left', '');
+      self.loadTarget.html(data);
+      self.container.show();
 
       $('a', self.container).click(function(e) {
         e.preventDefault();
@@ -136,7 +134,7 @@ PlaylistSelector = $.klass({
           url: $(this).attr('href'),
           method: $(this).data('method'),
           complete: function() {
-            self.close();
+            self.container.hide();
           }
         });
         return false;
@@ -144,19 +142,9 @@ PlaylistSelector = $.klass({
     });
   },
 
-  close: function() {
-    this.element.removeClass('back').addClass('add_to_playlist');
-    this.container.css('position', 'absolute');
-    this.panel.children('.details').css('display', 'block');
-    this.panel.css('margin-left', '');
-  },
-
   onclick: function(e) {
     e.preventDefault();
-    if (this.element.hasClass('back'))
-      this.close();
-    else
-      this.open();
+    this.open();
   }
 });
 
@@ -936,6 +924,16 @@ Turbolinks.enableProgressBar(false);
 
 $(document).on('page:change', function() {
   $.clearBehavior();
+
+  $('#select_playlist').hide();
+  $('body').mousedown(function(e) {
+    if (!$(e.target).parents('#select_playlist').length && !$(e.target).is('.add_to_playlist'))
+      $('#select_playlist').hide();
+  });
+  $('body').keydown(function(e) {
+    if (e.keyCode == 27)
+      $('#select_playlist').hide();
+  });
 
   // let us cache forms, make sure that auth tokens are replaced
   $('input[name=authenticity_token]').val($('meta[name=csrf-token]').attr('content'))

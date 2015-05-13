@@ -29,31 +29,6 @@
       }
     }
 
-    .select_playlist {
-      position: absolute;
-      top: 0px;
-      left: 420px;
-
-      .playlists {
-        a {
-          display: block;
-          width: 320px;
-
-          input[type=checkbox] {
-            margin-left: 5px;
-            margin-right: 5px;
-          }
-          &:hover {
-            text-decoration: none;
-            background-color: $orange;
-            span {
-              visibility: visible;
-            }
-          }
-        }
-      }
-    }
-
     .details {
       min-height: 60px;
       font-size: 12px;
@@ -127,7 +102,7 @@
       z-index: 2;
       padding-right: 12px;
 
-      a {
+      > a {
         text-indent: -9999px;
         display: block;
         width: 29px;
@@ -161,11 +136,6 @@
           @include retina-sprite(download);
           margin-left: 3.5px;
         }
-
-        &.back {
-          @include retina-sprite(red-x);
-          margin-left: 4px;
-        }
       }
     }
   }
@@ -177,4 +147,46 @@
 
 .asset.playing, .asset.hover {
   opacity: 0.99;
+}
+
+#select_playlist {
+  position: absolute;
+  top: 0px;
+  margin-left: -360px;
+  width: 340px;
+  background-color: #fefefe;
+  padding: 10px;
+  border: 1px solid #bbb;
+  box-shadow: 2px 2px 2px rgba(0,0,0,0.2);
+  display: none;
+
+  h1 {
+    color: $text_color;
+    font-weight: bold;
+    font-size: 14px;
+    text-shadow: none;
+    margin-bottom: 5px;
+  }
+
+  .playlists {
+    max-height: 180px;
+    overflow-y: auto;
+
+    a {
+      display: block;
+      width: 320px;
+      font-weight: normal;
+      font-size: 14px;
+      text-decoration: none;
+
+      input[type=checkbox] {
+        margin-left: 5px;
+        margin-right: 5px;
+      }
+      &:hover {
+        text-decoration: none;
+        background-color: #ddd;
+      }
+    }
+  }
 }
