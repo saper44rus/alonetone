@@ -4,15 +4,6 @@ PASSWORD_SALT = 'so_salty_its_unbearable'
 require 'authlogic_helpers'
 require 'sometimes'
 
-RECAPTCHA_ENABLED = Alonetone.try(:recaptcha_public)
-  
-if RECAPTCHA_ENABLED
-  Recaptcha.configure do |config|
-    config.public_key  = Alonetone.recaptcha_public
-    config.private_key = Alonetone.recaptcha_private
-  end
-end
-
 WillPaginate::ViewHelpers.pagination_options[:inner_window] = 2
 WillPaginate::ViewHelpers.pagination_options[:outer_window] = 0
 

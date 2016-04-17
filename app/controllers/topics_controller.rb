@@ -2,6 +2,8 @@ class TopicsController < ApplicationController
   before_filter :find_forum
   before_filter :find_topic, :only => [:show, :edit, :update, :destroy]
   before_filter :require_login, :only => [:create, :update]
+  before_filter :validate_recaptcha, only: :create
+
   layout "forums"
 
   def index
@@ -80,5 +82,13 @@ protected
   
   def find_topic
     @topic = @forum.topics.where(:permalink => params[:id]).take!
+  end
+
+  def validate_recaptcha
+    unless recaptcha_correct?
+      @topic = Topic.new(params[:topic])
+      @topic.errors.add("Recaptcha", "is incorrect")
+      render action: "new"
+    end
   end
 end

@@ -22,6 +22,10 @@
       <script type="text/javascript" src="http://use.typekit.com/<%= Alonetone.typekit %>.js"></script>
       <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
     <% end %>
+
+    <% if Alonetone.recaptcha? %>
+     <script src='https://www.google.com/recaptcha/api.js'></script>
+    <% end %>
   
       <!-- render user specific variables and js helpers -->
       <%= render :partial => 'shared/javascript_payload' %>

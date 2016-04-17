@@ -24,6 +24,10 @@
   .static_content a {
     color: $text_color;
   }
+
+  .g-recaptcha {
+    margin-bottom: 16px;
+  }
 }
 
 #breadcrumbs,#extras {

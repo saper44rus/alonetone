@@ -18,5 +18,10 @@ module Alonetone
         host
       end
     end
+
+    def recaptcha?
+      respond_to?(:recaptcha) &&
+        recaptcha["site_key"].present? && recaptcha["secret_key"].present?
+    end
   end
 end

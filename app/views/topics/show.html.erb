@@ -79,6 +79,11 @@
         <h3>Reply:</h3>
         <%= form_for :post, :url => forum_topic_posts_path(@forum, @topic, :page => @topic.last_page) do |f| -%>
           <%= f.text_area :body, :rows => 8, :cols => 40 %>
+
+          <% if Alonetone.recaptcha? %>
+            <div class="g-recaptcha" data-sitekey="<%= Alonetone.recaptcha["site_key"] %>"></div>
+          <% end %>
+
           <div class="submit_wrapper">
             <%= submit_tag "Post Reply" %>
           </div>

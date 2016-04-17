@@ -11,6 +11,11 @@
   <%= form_for :topic,
        :url  => forum_topics_path(@forum) do |f| -%>
   <%= render :partial => "form", :object => f %>
+
+  <% if Alonetone.recaptcha? %>
+    <div class="g-recaptcha" data-sitekey="<%= Alonetone.recaptcha["site_key"] %>"></div>
+  <% end %>
+
   <div class="submit_wrapper">
     <%= f.submit 'Post Topic' %> or  <%= link_to('Cancel', forum_path(@forum)).html_safe %>
   </div>

@@ -23,7 +23,9 @@ class ApplicationController < ActionController::Base
   end
   
   protected
-  
+
+  include Recaptcha
+
   def not_found
     flash[:error] = "Hmm, we didn't find that alonetoner"
     raise ActionController::RoutingError.new('User Not Found')

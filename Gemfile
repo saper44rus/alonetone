@@ -29,7 +29,6 @@ gem "authlogic"
 gem "scrypt" # for authlogic
 gem "request_store" # for authlogic
 gem 'reportable', :git => 'git://github.com/saulabs/reportable.git', :require => 'saulabs/reportable'
-gem 'recaptcha', :require => 'recaptcha/rails'
 
 # view
 gem "redcarpet"
