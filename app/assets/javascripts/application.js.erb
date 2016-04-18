@@ -464,6 +464,10 @@ CommentForm = $.klass(Remote.Form, {
       this.enable();
     },
     success:function(e){
+      this.element.find('.g-recaptcha').each(function() {
+        grecaptcha.reset(this.dataset.recaptchaId);
+      });
+
       this.resultBox.html('<div class="ajax_success">Submitted, thanks!</p>').fadeIn(100);
       this.textarea.val('');
     },
@@ -615,6 +619,12 @@ Track = $.klass({
   },
   
   openDetails: function(desiredTab){
+    this.element.find('.recaptcha').each(function() {
+      var params = { sitekey: this.dataset.sitekey };
+      this.dataset.recaptchaId = grecaptcha.render(this, params);
+      this.classList.remove('recaptcha');
+      this.classList.add('g-recaptcha');
+    });
 
     // don't allow this to happen when editing playlist
     if(!this.allowDetailsOpen) return false;

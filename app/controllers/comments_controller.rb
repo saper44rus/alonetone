@@ -7,8 +7,13 @@ class CommentsController < ApplicationController
   def create
     if request.xhr? # it always is...
       unless params[:comment] && params[:comment][:body].present?
-        return head(:bad_request) 
+        return head(:bad_request)
       end
+
+      unless logged_in? || recaptcha_correct?
+        return head(:bad_request)
+      end
+
       @comment = Comment.new(massaged_params)
       return head(:bad_request) unless @comment.save
       render :nothing => true
